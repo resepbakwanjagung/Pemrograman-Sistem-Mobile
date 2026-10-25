@@ -13,6 +13,7 @@ void main() {
   // LANGKAH 1: Variabel & Tipe Data untuk Data Produk
   // ---------------------------------------------------------------------------
   print('--- LANGKAH 1: Variabel & Tipe Data Data Produk ---');
+  // const vs final vs var
   print('Const Nama Toko : $namaToko');
   
   var namaProdukVar = 'Mouse Gaming RGB';
@@ -64,6 +65,7 @@ void main() {
   // LANGKAH 3: Control Flow untuk Logika Toko
   // ---------------------------------------------------------------------------
   print('--- LANGKAH 3: Control Flow (if-else, for, while, switch) ---');
+  // if-else status stok
   print('Testing Status Stok dengan if-else:');
   for (var sampleStok in [0, 3, 10]) {
     String labelStatus;
@@ -77,6 +79,7 @@ void main() {
     print('  - Jumlah Stok = $sampleStok -> Status: $labelStatus');
   }
 
+  // Perulangan for total belanja list harga
   List<double> hargaBeberapaProduk = [150000.0, 85000.0, 25000.0, 450000.0];
   double totalFor = 0.0;
   for (int i = 0; i < hargaBeberapaProduk.length; i++) {
@@ -84,6 +87,7 @@ void main() {
   }
   print('Perulangan for (Total Belanja List Harga): ${formatRupiah(totalFor)}');
 
+  // Perulangan while simulasi pengurangan stok
   int simulasiStok = 5;
   print('Perulangan while (Simulasi Pengurangan Stok):');
   while (simulasiStok > 0) {
@@ -92,6 +96,7 @@ void main() {
   }
   print('  Stok akhir: $simulasiStok (Stok Habis)');
 
+  // Switch-case diskon kategori
   print('Switch-case Diskon Kategori:');
   for (var cat in ['Elektronik', 'Fashion', 'Makanan', 'Lainnya']) {
     print('  - Kategori: $cat -> Diskon: ${getDiskonKategori(cat)}%');
@@ -126,6 +131,7 @@ void main() {
   );
   print('Instance Product: $prod1');
 
+  // Class Turunan DiscountedProduct
   DiscountedProduct discProd = DiscountedProduct(
     id: 'P101',
     name: 'Smartwatch TokoKita Fit',
@@ -133,7 +139,7 @@ void main() {
     imageUrl: 'assets/watch.png',
     category: 'Elektronik',
     stock: 10,
-    description: null,
+    description: null, // Null Safety Test
     discountPercent: 15.0,
   );
   print('Instance DiscountedProduct (Inheritance): $discProd');
@@ -166,6 +172,6 @@ void main() {
   print('   TOTAL BELANJA KERANJANG = ${formatRupiah(totalBelanjaKeranjang)}');
 
   print('\n====================================================');
-  print('  PENGUJIAN SELESAI & SELURUH LOGIKA BERHASIL VALIDATED ');
+  print('  PENGUJIAN SELESAI & SELURUH LOGIKA BERHASIL VADIDATED ');
   print('====================================================');
 }
