@@ -2,9 +2,8 @@
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 
-/// Langkah 1 & 4 (Pertemuan 4):
-/// Halaman utama (HomePage) dengan App Bar kustom menggunakan Row & Column,
-/// serta daftar produk efisien dengan ListView.builder.
+/// Langkah 1 & 4 (Pertemuan 4) + Navigasi (Pertemuan 5):
+/// Halaman daftar produk utama yang terpasang pada tab Beranda.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -15,7 +14,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header Halaman menggunakan Container, Row, dan Column
+            // Header Halaman
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
               decoration: const BoxDecoration(
@@ -31,7 +30,6 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Judul dan subjudul disusun secara vertikal dengan Column
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
@@ -54,14 +52,14 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
 
-                  // Ikon Keranjang Belanja di sisi kanan header
+                  // Ikon Keranjang Belanja di Header
                   IconButton(
                     icon: const Icon(Icons.shopping_cart_outlined, color: Colors.deepPurple),
                     tooltip: 'Keranjang Belanja',
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Keranjang belanja belum tersedia'),
+                          content: Text('Buka tab Keranjang di navigasi bawah'),
                           duration: Duration(seconds: 1),
                         ),
                       );
@@ -71,7 +69,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
-            // Daftar Produk TokoKita menggunakan ListView.builder
+            // Daftar Produk TokoKita
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 8),
