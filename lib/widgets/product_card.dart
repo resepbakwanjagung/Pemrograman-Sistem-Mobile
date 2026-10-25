@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/product.dart';
 import 'price_label.dart';
 import 'stock_badge.dart';
 import 'category_tag.dart';
 
-/// Langkah 2: ProductCard sebagai StatefulWidget dengan pengamatan Lifecycle
+/// Langkah 2, 3, & 5 (Pertemuan 4):
+/// ProductCard dengan dekorasi Container (bayangan, border radius, warna latar),
+/// Stack & Positioned untuk badge diskon dan badge status stok,
+/// serta penataan horizontal dengan Expanded & Flexible agar bebas overflow.
 class ProductCard extends StatefulWidget {
   final Product product;
 
@@ -14,9 +17,7 @@ class ProductCard extends StatefulWidget {
   });
 
   @override
-  State<ProductCard> createState() {
-    return _ProductCardState();
-  }
+  State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
@@ -31,88 +32,149 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     print('[ProductCard Lifecycle] build() dipanggil untuk produk: ${widget.product.name}');
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    final isDiscounted = widget.product is DiscountedProduct;
+    final discountedProduct = isDiscounted ? widget.product as DiscountedProduct : null;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Gambar / Icon Placeholder & Tombol Favorit
-            Stack(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Gambar / Thumbnail Produk dengan Stack & Positioned
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: Stack(
               children: [
+                // Background Thumbnail / Placeholder Icon
                 Container(
-                  height: 140,
-                  width: double.infinity,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade50,
-                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.deepPurple.shade50,
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Icon(
                       _getCategoryIcon(widget.product.category),
-                      size: 64,
-                      color: Colors.blueGrey.shade600,
+                      size: 44,
+                      color: Colors.deepPurple.shade400,
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white.withAlpha(230),
-                    child: IconButton(
-                      icon: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite ? Colors.red : Colors.grey,
+
+                // Badge Diskon (Pojok Kanan Atas) hanya jika produk berdiskon
+                if (isDiscounted && discountedProduct != null)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade600,
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isFavorite = !_isFavorite;
-                          print('[ProductCard State] setState() dipanggil: Favorite ${widget.product.name} = $_isFavorite');
-                        });
-                      },
+                      child: Text(
+                        '${discountedProduct.discountPercent.toInt()}% OFF',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
+
+                // Badge Status Stok (Pojok Kiri Bawah gambar)
+                Positioned(
+                  bottom: 6,
+                  left: 6,
+                  child: StockBadge(stock: widget.product.stock),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            // Header Row: Nama & StockBadge
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+
+          const SizedBox(width: 14),
+
+          // Detail Informasi Produk menggunakan Expanded agar mengisi sisa ruang
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: Text(
-                    widget.product.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                StockBadge(stock: widget.product.stock),
-              ],
-            ),
-            const SizedBox(height: 8),
-            // Footer Row: PriceLabel & CategoryTag
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                PriceLabel(price: widget.product.price),
+                // Kategori Tag
                 CategoryTag(category: widget.product.category),
+
+                const SizedBox(height: 4),
+
+                // Nama Produk
+                Text(
+                  widget.product.name,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const SizedBox(height: 6),
+
+                // Harga Produk (Flexible dan tertata)
+                Row(
+                  children: [
+                    Flexible(
+                      child: PriceLabel(
+                        price: isDiscounted && discountedProduct != null
+                            ? discountedProduct.hitungHargaFinal()
+                            : widget.product.price,
+                      ),
+                    ),
+                    if (isDiscounted) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        widget.product.formattedPrice,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+
+          // Tombol Aksi Favorit
+          IconButton(
+            icon: Icon(
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorite ? Colors.red : Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _isFavorite = !_isFavorite;
+                print('[ProductCard State] setState() dipanggil: Favorite ${widget.product.name} = $_isFavorite');
+              });
+            },
+          ),
+        ],
       ),
     );
   }

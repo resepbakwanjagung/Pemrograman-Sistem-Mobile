@@ -1,4 +1,4 @@
-// lib/models/product.dart
+﻿// lib/models/product.dart
 // Model data utama untuk aplikasi TokoKita (Pertemuan 2)
 
 /// Nama Toko dijadikan const karena nilainya konstan pada tingkat kompilasi
@@ -114,10 +114,10 @@ double hitungTotalBelanja(List<Product> keranjang) {
 }
 
 // -----------------------------------------------------------------------------
-// DUMMY DATA UNTUK TOKOKITA (TUGAS MANDIRI 2: MINIMAL 8 PRODUK)
+// DUMMY DATA UNTUK TOKOKITA (MINIMAL 15 PRODUK UNTUK PRAKTIKUM 4)
 // -----------------------------------------------------------------------------
 final List<Product> dummyProducts = [
-  Product(
+  DiscountedProduct(
     id: 'P001',
     name: 'Smartphone TokoKita X1',
     price: 3500000.0,
@@ -125,6 +125,7 @@ final List<Product> dummyProducts = [
     category: 'Elektronik',
     stock: 12,
     description: 'Smartphone canggih dengan layar AMOLED 120Hz.',
+    discountPercent: 10.0,
   ),
   Product(
     id: 'P002',
@@ -153,7 +154,7 @@ final List<Product> dummyProducts = [
     stock: 0, // Stok habis
     description: null, // Nullable test
   ),
-  Product(
+  DiscountedProduct(
     id: 'P005',
     name: 'Keripik Pisang Lumer 250g',
     price: 25000.0,
@@ -161,6 +162,7 @@ final List<Product> dummyProducts = [
     category: 'Makanan',
     stock: 100,
     description: 'Camilan pisang dengan varian rasa cokelat lumer.',
+    discountPercent: 5.0,
   ),
   Product(
     id: 'P006',
@@ -171,7 +173,7 @@ final List<Product> dummyProducts = [
     stock: 4, // Stok terbatas
     description: 'Kopi susu gula aren botol 1 liter.',
   ),
-  Product(
+  DiscountedProduct(
     id: 'P007',
     name: 'Headphone Wireless BassBoost',
     price: 450000.0,
@@ -179,6 +181,7 @@ final List<Product> dummyProducts = [
     category: 'Elektronik',
     stock: 15,
     description: 'Headphone Bluetooth dengan daya tahan baterai 30 jam.',
+    discountPercent: 15.0,
   ),
   Product(
     id: 'P008',
@@ -188,5 +191,80 @@ final List<Product> dummyProducts = [
     category: 'Fashion',
     stock: 2, // Stok terbatas
     description: 'Sepatu kets stylish untuk gaya kasual.',
+  ),
+  Product(
+    id: 'P009',
+    name: 'Smartwatch Active Pro',
+    price: 890000.0,
+    imageUrl: 'assets/images/smartwatch.png',
+    category: 'Elektronik',
+    stock: 8,
+    description: 'Jam tangan pintar dengan pemantau detak jantung dan SpO2.',
+  ),
+  DiscountedProduct(
+    id: 'P010',
+    name: 'Kemeja Flannel Tartan',
+    price: 195000.0,
+    imageUrl: 'assets/images/flannel.png',
+    category: 'Fashion',
+    stock: 18,
+    description: 'Kemeja flannel motif kotak katun premium.',
+    discountPercent: 20.0,
+  ),
+  Product(
+    id: 'P011',
+    name: 'Roti Gandum Whole Wheat',
+    price: 22000.0,
+    imageUrl: 'assets/images/bread.png',
+    category: 'Makanan',
+    stock: 5, // Stok terbatas
+    description: 'Roti tawar gandum tinggi serat sehat.',
+  ),
+  Product(
+    id: 'P012',
+    name: 'Mouse Wireless Silent Click',
+    price: 135000.0,
+    imageUrl: 'assets/images/mouse.png',
+    category: 'Elektronik',
+    stock: 0, // Stok habis
+    description: 'Mouse ergonomis tanpa suara klik.',
+  ),
+  DiscountedProduct(
+    id: 'P013',
+    name: 'Tas Ransel Laptop Waterproof',
+    price: 320000.0,
+    imageUrl: 'assets/images/backpack.png',
+    category: 'Fashion',
+    stock: 14,
+    description: 'Ransel kapasitas 20L dengan kompartemen laptop 15.6 inch.',
+    discountPercent: 12.0,
+  ),
+  Product(
+    id: 'P014',
+    name: 'Cokelat Batang Dark 70%',
+    price: 38000.0,
+    imageUrl: 'assets/images/chocolate.png',
+    category: 'Makanan',
+    stock: 25,
+    description: 'Cokelat hitam murni dengan rasa intens.',
+  ),
+  DiscountedProduct(
+    id: 'P015',
+    name: 'Keyboard Mechanical RGB',
+    price: 650000.0,
+    imageUrl: 'assets/images/keyboard.png',
+    category: 'Elektronik',
+    stock: 7,
+    description: 'Keyboard mechanical blue switch dengan lampu RGB.',
+    discountPercent: 25.0,
+  ),
+  Product(
+    id: 'P016',
+    name: 'Celana Chino Slim Fit',
+    price: 210000.0,
+    imageUrl: 'assets/images/chino.png',
+    category: 'Fashion',
+    stock: 10,
+    description: 'Celana panjang chino bahan stretch kasual.',
   ),
 ];
