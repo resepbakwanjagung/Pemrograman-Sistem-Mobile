@@ -75,13 +75,26 @@ class _ProductCardState extends State<ProductCard> {
                           color: Colors.deepPurple.shade50,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Center(
-                          child: Icon(
-                            _getCategoryIcon(widget.product.category),
-                            size: 44,
-                            color: Colors.deepPurple.shade400,
-                          ),
-                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: widget.product.imageUrl.startsWith('http')
+                            ? Image.network(
+                                widget.product.imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Center(
+                                  child: Icon(
+                                    _getCategoryIcon(widget.product.category),
+                                    size: 44,
+                                    color: Colors.deepPurple.shade400,
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: Icon(
+                                  _getCategoryIcon(widget.product.category),
+                                  size: 44,
+                                  color: Colors.deepPurple.shade400,
+                                ),
+                              ),
                       ),
                       if (isDiscounted && discountedProduct != null)
                         Positioned(

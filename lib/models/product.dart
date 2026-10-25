@@ -25,6 +25,31 @@ class Product {
     this.description,
   });
 
+  /// Factory constructor untuk memetakan JSON dari Fake Store API (Pertemuan 7)
+  factory Product.fromJson(Map<String, dynamic> json) {
+    // Fake Store API: id (int), title (String), price (num), description (String), category (String), image (String)
+    // Konversi kurs USD Fake Store API ke estimasi IDR (x 15.000) agar selaras dengan format Rupiah TokoKita
+    final rawPrice = json['price'];
+    final double parsedPrice = rawPrice is num ? (rawPrice.toDouble() * 15000) : 0.0;
+
+    // Nilai default stok (karena Fake Store API tidak menyertakan field stock, gunakan rating.count atau default 10)
+    int parsedStock = 10;
+    if (json['rating'] != null && json['rating']['count'] != null) {
+      final count = json['rating']['count'];
+      parsedStock = count is int ? (count % 20) : 10;
+    }
+
+    return Product(
+      id: json['id'] != null ? json['id'].toString() : '',
+      name: json['title'] as String? ?? 'Tanpa Nama',
+      price: parsedPrice,
+      imageUrl: json['image'] as String? ?? '',
+      category: json['category'] as String? ?? 'Umum',
+      stock: parsedStock,
+      description: json['description'] as String?,
+    );
+  }
+
   /// Status ketersediaan produk (getter/method)
   bool get isAvailable => stock > 0;
 
