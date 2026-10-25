@@ -1,19 +1,19 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/product.dart';
+import '../screens/product_detail_page.dart';
 import 'price_label.dart';
 import 'stock_badge.dart';
 import 'category_tag.dart';
 
-/// Langkah 2, 3, & 5 (Pertemuan 4) + Navigasi ke Detail (Pertemuan 5):
-/// Menambahkan onTap InkWell untuk navigasi ke named route '/detail' dan menerima kembalian data.
+/// Langkah 2, 3, & 5 (Pertemuan 4) + GetX Routing (Pertemuan 6):
+/// Menggunakan Get.to(() => ProductDetailPage(product: product)) untuk membuka halaman detail.
 class ProductCard extends StatefulWidget {
   final Product product;
-  final void Function(int quantity)? onAddToCart;
 
   const ProductCard({
     super.key,
     required this.product,
-    this.onAddToCart,
   });
 
   @override
@@ -53,37 +53,16 @@ class _ProductCardState extends State<ProductCard> {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () async {
-            // Navigasi ke named route '/detail' dengan mengirim objek product
-            final result = await Navigator.pushNamed(
-              context,
-              '/detail',
-              arguments: widget.product,
-            );
-
-            // Menerima nilai kembalian (jumlah barang) jika ditambahkan ke keranjang
-            if (result != null && result is int && context.mounted) {
-              if (widget.onAddToCart != null) {
-                widget.onAddToCart!(result);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Berhasil menambahkan $result ${widget.product.name} ke keranjang!',
-                    ),
-                    backgroundColor: Colors.deepPurple,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            }
+          onTap: () {
+            // Navigasi ke Halaman Detail menggunakan Get.to()
+            Get.to(() => ProductDetailPage(product: widget.product));
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Gambar / Thumbnail Produk dengan Stack & Positioned
+                // Thumbnail Gambar dengan Stack & Positioned
                 SizedBox(
                   width: 100,
                   height: 100,
@@ -180,7 +159,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ),
 
-                // Tombol Aksi Favorit
+                // Tombol Favorit
                 IconButton(
                   icon: Icon(
                     _isFavorite ? Icons.favorite : Icons.favorite_border,

@@ -1,12 +1,14 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/product.dart';
 import '../widgets/price_label.dart';
 import '../widgets/stock_badge.dart';
 import '../widgets/category_tag.dart';
+import '../controllers/cart_controller.dart';
 
-/// Halaman Detail Produk (Pertemuan 5):
-/// Menampilkan informasi lengkap produk, kontrol quantity (tambah/kurang),
-/// dan mengembalikan jumlah yang ditambahkan ke keranjang via Navigator.pop(context, quantity).
+/// Halaman Detail Produk (Pertemuan 5 & 6):
+/// Menggunakan Get.find<CartController>() untuk menambah produk ke keranjang via addToCart,
+/// serta navigasi kembali menggunakan Get.back().
 class ProductDetailPage extends StatefulWidget {
   final Product product;
 
@@ -40,6 +42,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.find<CartController>();
     final isDiscounted = widget.product is DiscountedProduct;
     final discountedProduct = isDiscounted ? widget.product as DiscountedProduct : null;
     final finalPrice = isDiscounted && discountedProduct != null
@@ -52,12 +55,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 1,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar / Placeholder Header
             Container(
               height: 250,
               width: double.infinity,
@@ -70,13 +76,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Kategori & Badge Stok
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -84,10 +88,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       StockBadge(stock: widget.product.stock),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Nama Produk
                   Text(
                     widget.product.name,
                     style: const TextStyle(
@@ -96,10 +97,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       color: Colors.black87,
                     ),
                   ),
-
                   const SizedBox(height: 8),
-
-                  // Harga & Badge Diskon
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -140,10 +138,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ],
                     ],
                   ),
-
                   const Divider(height: 32),
-
-                  // Deskripsi Produk
                   const Text(
                     'Deskripsi Produk',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -153,10 +148,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     widget.product.description ?? 'Tidak ada deskripsi untuk produk ini.',
                     style: const TextStyle(fontSize: 14, color: Colors.black54, height: 1.5),
                   ),
-
                   const Divider(height: 32),
-
-                  // Kontrol Jumlah Produk (Quantity)
                   const Text(
                     'Jumlah Pembelian',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -219,8 +211,19 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             onPressed: widget.product.stock <= 0
                 ? null
                 : () {
-                    // Mengembalikan jumlah item ke halaman sebelumnya
-                    Navigator.pop(context, _quantity);
+                    // Masukkan ke CartController secara reaktif
+                    cartController.addToCart(widget.product, quantity: _quantity);
+
+                    Get.snackbar(
+                      'Berhasil Ditambahkan',
+                      '$_quantity ${widget.product.name} telah masuk ke keranjang belanja.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.deepPurple,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                    );
+
+                    Get.back(); // Kembali ke halaman sebelumnya dengan Get.back()
                   },
           ),
         ),

@@ -1,14 +1,19 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
+import '../controllers/cart_controller.dart';
+import 'cart_page.dart';
 
-/// Langkah 1 & 4 (Pertemuan 4) + Navigasi (Pertemuan 5):
-/// Halaman daftar produk utama yang terpasang pada tab Beranda.
+/// Halaman Beranda Utama (Pertemuan 4, 5, & 6):
+/// Menampilkan badge reaktif di header via CartController dan Obx.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.find<CartController>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
       body: SafeArea(
@@ -52,18 +57,19 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
 
-                  // Ikon Keranjang Belanja di Header
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart_outlined, color: Colors.deepPurple),
-                    tooltip: 'Keranjang Belanja',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Buka tab Keranjang di navigasi bawah'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    },
+                  // Ikon Keranjang Belanja di Header dengan Badge Reaktif (Obx)
+                  Obx(
+                    () => IconButton(
+                      icon: Badge(
+                        isLabelVisible: cartController.totalItem > 0,
+                        label: Text('${cartController.totalItem}'),
+                        child: const Icon(Icons.shopping_cart_outlined, color: Colors.deepPurple),
+                      ),
+                      tooltip: 'Keranjang Belanja',
+                      onPressed: () {
+                        Get.to(() => const CartPage());
+                      },
+                    ),
                   ),
                 ],
               ),

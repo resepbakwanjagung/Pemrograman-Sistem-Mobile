@@ -1,8 +1,12 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/cart_controller.dart';
 import 'home_page.dart';
+import 'cart_page.dart';
 
-/// Halaman Utama (MainPage) dengan BottomNavigationBar (Pertemuan 5):
-/// Menyediakan kerangka navigasi utama dengan 3 tab: Beranda, Keranjang, dan Profil.
+/// Halaman Utama (MainPage) dengan BottomNavigationBar (Pertemuan 5 & 6):
+/// Mendaftarkan CartController secara global dengan Get.put,
+/// menampilkan badge reaktif pada tab Keranjang, serta menghubungkan tab ke CartPage nyata.
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -13,9 +17,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
+  // Inisialisasi CartController satu kali di tingkat atas aplikasi
+  final CartController _cartController = Get.find<CartController>();
+
   final List<Widget> _pages = const [
     HomePage(),
-    CartPlaceholderPage(),
+    CartPage(),
     ProfilePlaceholderPage(),
   ];
 
@@ -23,64 +30,39 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: Colors.deepPurple,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            activeIcon: Icon(Icons.shopping_cart),
-            label: 'Keranjang',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Placeholder Halaman Keranjang
-class CartPlaceholderPage extends StatelessWidget {
-  const CartPlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Keranjang Belanja'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 1,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey.shade400),
-            const SizedBox(height: 16),
-            const Text(
-              'Keranjang Belanja Anda Kosong',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          selectedItemColor: Colors.deepPurple,
+          unselectedItemColor: Colors.grey,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Beranda',
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Jelajahi produk dan tambahkan barang ke sini.',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            BottomNavigationBarItem(
+              icon: Badge(
+                isLabelVisible: _cartController.totalItem > 0,
+                label: Text('${_cartController.totalItem}'),
+                child: const Icon(Icons.shopping_cart_outlined),
+              ),
+              activeIcon: Badge(
+                isLabelVisible: _cartController.totalItem > 0,
+                label: Text('${_cartController.totalItem}'),
+                child: const Icon(Icons.shopping_cart),
+              ),
+              label: 'Keranjang',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profil',
             ),
           ],
         ),
